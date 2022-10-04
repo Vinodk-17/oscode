@@ -1,0 +1,189 @@
+Codes
+WRITE A PROGRAM TO SOLVE PRODUCER PROBLEM OF PROCESS COMMUNICATION
+
+              from threading import Thread, Semaphore
+              import random,time
+              full = Semaphore(0)
+              empty = Semaphore(10)
+              mutex = Semaphore(1)
+              class producerThread(Thread):
+                  def __init__(this,buffer):
+                      Thread.__init__(this)
+                      this.buffer = buffer
+                  def run(this):
+                      nums = range(5)
+                      while(True):
+                          empty.acquire()
+                          mutex.acquire()
+                          num = random.randint(0,5)
+                          this.buffer.append(num)
+                          print("Produced ", num)
+                          mutex.release()
+                          full.release()
+                          time.sleep(1)
+              class consumerThread(Thread):
+                  def __init__(this,buffer):
+                      Thread.__init__(this)
+                      this.buffer = buffer
+                  def run(this):
+                      while(True):
+                          full.acquire()
+                          mutex.acquire()
+                          print("Consumed ", this.buffer.pop())
+                          mutex.release()
+                          empty.release()
+                          time.sleep(1)
+              buffer = []
+              producerThread(buffer).start()
+              consumerThread(buffer).start()
+            
+WRITE A PROGRAM TO IMPLEMENT CONCEPT OF THREAD – FIBONACCI SERIES'
+
+                    from threading import Thread
+                    class fibonacciThread(Thread):
+                        def __init__(this,limit):
+                            Thread.__init__(this)
+                            this.limit = limit
+                        def run(this):
+                            a = 0
+                            b = 1
+                            while (a < this.limit):
+                                print(a)
+                                a,b = b,a+b
+                    fibonacciThread(5000).start()
+                
+WRITE A IMPLEMENT FIRST COME FIRST SERVE CPU SCHEDULING ALGORITHM
+
+                    #fcfs
+                    sequence = input("enter the sequence delimited by whitespace ").split(" ")
+                    waiting = [0]
+                    for i in range(0,len(sequence)-1):
+                        waiting.append(waiting[i]+int(sequence[i]))
+                    print("Burst\tWaiting")
+                    for i in range(0,len(waiting)):
+                        print(sequence[i],"\t",waiting[i])
+                    print ("Average Waiting = ", sum(waiting)/len(waiting))
+                
+WRITE A PROGRAM TO IMPLEMENT BANKERS ALGORITHM
+
+                     def getMatrix(pro, res):
+                    matrix = []
+                    for i in range(pro):
+                        resource = []
+                        for j in range(res):
+                            resource.append(int(input("P"+str(i)+" R"+str(j)+":")))
+                        matrix.append(resource)
+                    return matrix
+                
+                #initialization
+                processes = int(input("Enter the number of processes "))
+                resources = int(input("Enter the number of resources "))
+                print("Enter Allocation Matrix")
+                allocation = getMatrix(processes, resources)
+                print("Enter Maximum Matrix")
+                maximum = getMatrix(processes, resources)
+                print("Enter Available Resources")
+                available = []
+                for i in range(resources):
+                    available.append(int(input("R:" + str(i))))
+                work = available[:]
+                need = maximum[:]
+                finish = []
+                for i in range(processes):
+                    finish.append(False)
+                    for j in range(resources):
+                        need[i][j] -= allocation[i][j]
+                        
+                #main logic
+                sequence = []
+                while(True):
+                    flag = True
+                    for i in range(processes):
+                        if(not finish[i]):
+                            if(need[i]<=work):
+                                finish[i] = True
+                                flag = False
+                                for j in range(resources):
+                                    work[j] +=  allocation[i][j]
+                                sequence.append(i)               
+                    if(flag):
+                        if(len(sequence)!=processes):
+                            print("No Safe Sequence found")
+                        else:
+                            print("Safe Sequence:" + str(sequence))
+                        break  
+                      
+5.WRITE A PROGRAM TO IMPLEMENT SJF
+                            #sjf
+                            
+class node:
+    def __init__(this, pid, burst):
+        this.pid = pid
+        this.burst = burst
+sequence = input("enter the sequence delimited by whitespace ").split(" ")
+nodes = []
+waiting = [0]
+for i in range(0,len(sequence)):
+    nodes.append(node(i+1,int(sequence[i])))
+for i in range(0,len(sequence)):
+    for j in range(0,len(sequence)-1-i):
+        if(nodes[j].burst>nodes[j+1].burst):
+            temp = nodes[j]
+            nodes[j] = nodes[j+1]
+            nodes[j+1] = temp
+            
+for i in range(0,len(sequence)-1):
+    waiting.append(waiting[i]+nodes[i].burst)
+print("Pid\tBurst\tWaiting")
+for i in range(0,len(waiting)):
+    print(nodes[i].pid,"\t",nodes[i].burst,"\t",waiting[i])
+print ("Average Waiting = ", sum(waiting)/len(waiting))
+                        
+                        
+## code for twin primenumbers:
+
+from threading import Thread
+class TwinPrime(Thread):
+    def __init__(this,a,b):
+        Thread.__init__(this)
+        this.a, this.b = a, b
+    def prime(this,n):
+        for i in range(2,n//2+1):
+            if(n%i==0):
+                return False
+        return True
+    def run(this):
+        if(this.b-this.a==2):
+            if (this.prime(this.a) and this.prime(this.b)):
+                print("Twin Prime")
+                return
+        print("Not Twin Prime")   
+a=int(input("Enter First number: "))
+b=int(input("Enter Second number: "))
+TwinPrime(a,b).start()
+        
+## code for prime thread number
+
+
+#display prime nos using thread, limit given by mainthread
+#display fibonaci nos, limit by main thread
+from threading import Thread
+class primeThread(Thread):
+    def __init__(this,limit):
+        Thread.__init__(this)
+        this.limit = limit
+    def run(this):
+        print("2")
+        for i in range (3,this.limit+1,2):
+            flag = True
+            for j in range(3,(i//2)+1,2):
+                if(i%j==0):
+                    flag = False
+                    break
+            if(flag):
+                print(i)
+
+p = primeThread(199999)
+p.start()
+
+
